@@ -5,7 +5,9 @@ using System;
 public class GameEventHandler : MonoBehaviour
 {
     public static GameEventHandler Instance { get; private set; }
+    public Action OnGameStartReq;
     public Action OnGameStart;
+    public Action OnGameRestart;
     public Action OnGamePause;
     public Action OnGameOver;
 
@@ -21,7 +23,9 @@ public class GameEventHandler : MonoBehaviour
 
     private void FreeOldReferences()
     {
+        OnGameStartReq = null;
         OnGameStart = null;
+        OnGameRestart = null;
         OnGamePause = null;
         OnGameOver = null;
 

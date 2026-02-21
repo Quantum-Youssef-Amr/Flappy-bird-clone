@@ -43,12 +43,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
+        if (!_rb.simulated) return;
+
         _rb.linearVelocity = Vector2.zero;
         _rb.AddForce(JumpForce * Vector2.up, ForceMode2D.Impulse);
     }
 
     void Update()
     {
+        if (!_rb.simulated) return;
+
         _t.rotation = Quaternion.Lerp(
             _t.rotation,
             Quaternion.Euler(0, 0, Mathf.Clamp(Vector2.SignedAngle(Vector2.right, _rb.linearVelocity), BirdAngleBounds.x, BirdAngleBounds.y)),

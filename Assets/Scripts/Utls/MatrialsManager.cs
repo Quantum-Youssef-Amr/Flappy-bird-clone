@@ -18,4 +18,9 @@ public class MaterialsManager : MonoBehaviour
         foreach (var Mat in Mats)
             Mat.SetInteger(MAT_FIELD, state);
     }
+
+    void OnApplicationQuit()
+    {
+        ManageMat(0);
+    }
 }
