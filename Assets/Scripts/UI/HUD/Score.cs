@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -6,25 +5,27 @@ public class Score : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI ScoreText;
     private int _score;
-    private Coroutine _scoreAdding;
 
     #region events
     void Start()
     {
         GameEventHandler.Instance.OnPlayerScore += score => { _score += score; UpdateScoreText(); };
         GameEventHandler.Instance.OnGameOver += () => SaveScore();
+        GameEventHandler.Instance.OnGameRestart += () => SaveScore();
     }
 
     void OnEnable()
     {
         GameEventHandler.Instance.OnPlayerScore -= score => { _score += score; UpdateScoreText(); };
         GameEventHandler.Instance.OnGameOver -= () => SaveScore();
+        GameEventHandler.Instance.OnGameRestart -= () => SaveScore();
     }
 
     void OnDisable()
     {
         GameEventHandler.Instance.OnPlayerScore -= score => { _score += score; UpdateScoreText(); };
         GameEventHandler.Instance.OnGameOver -= () => SaveScore();
+        GameEventHandler.Instance.OnGameRestart -= () => SaveScore();
     }
     #endregion
 

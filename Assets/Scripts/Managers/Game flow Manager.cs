@@ -8,9 +8,6 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField, Tooltip("In seconds")] private float TransitionSpeed = 0.2f;
     private Coroutine _transitioning;
 
-    public void StartGame() => GameEventHandler.Instance.OnGameStartReq?.Invoke();
-
-
     void Start()
     {
         GameEventHandler.Instance.OnGameStartReq += () => TransitionFrom(
