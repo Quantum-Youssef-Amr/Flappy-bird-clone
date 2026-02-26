@@ -22,8 +22,6 @@ public class SaveEngine : MonoBehaviour
         Instance = this;
         PATH = Application.persistentDataPath;
         LoadData();
-
-        DontDestroyOnLoad(gameObject);
     }
 
     public void NewGame()

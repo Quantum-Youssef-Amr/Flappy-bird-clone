@@ -1,9 +1,5 @@
-using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 
 public class SettingManager : MonoBehaviour
 {
