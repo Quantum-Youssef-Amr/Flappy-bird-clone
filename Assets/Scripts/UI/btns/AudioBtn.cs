@@ -23,3 +23,4 @@ public class AudioBtn : MonoBehaviour
         _btnIcon.sprite = BtnIcons[SaveEngine.Instance.Data.settings.UseSFX ? 0 : 1];
     }
 }
+

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -21,11 +22,7 @@ public class GameFlowManager : MonoBehaviour
 
         GameEventHandler.Instance.OnGameRestart += () =>
         {
-            TransitionFrom(
-                GameOverMenu,
-                GameHUD,
-                TransitionSpeed,
-                GameEventHandler.Instance.OnGameStart);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         };
 
         GameEventHandler.Instance.OnGamePause += () =>
@@ -70,8 +67,8 @@ public class GameFlowManager : MonoBehaviour
         yield return ShowScreen(screen2, TransitionSpeed);
         MakeSureToHideScreen(screen2, 1);
 
-        actionToFireWhenFinish?.Invoke();
         _transitioning = null;
+        actionToFireWhenFinish?.Invoke();
     }
 
     private IEnumerator ShowScreen(CanvasGroup screen, float TransitionSpeed)

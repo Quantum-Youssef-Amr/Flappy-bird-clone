@@ -33,6 +33,7 @@ public class Score : MonoBehaviour
     {
         SaveEngine.Instance.Data.HighestScore = Mathf.Max(SaveEngine.Instance.Data.HighestScore, _score);
         _score = 0;
+        UpdateScoreText();
     }
 
     private void UpdateScoreText()
