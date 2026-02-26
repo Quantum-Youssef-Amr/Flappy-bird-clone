@@ -1528,7 +1528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e469b2f28ab35a2c2bd5b376ac9de30c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveEngine
-  useEncryption: 0
+  useEncryption: 1
 --- !u!1 &1140539336
 GameObject:
   m_ObjectHideFlags: 0
