@@ -4,8 +4,9 @@ using System.Collections;
 
 public class PipeSpawner : MonoBehaviour
 {
-    [SerializeField] private int Rate;
+    [SerializeField] private float Rate;
     [SerializeField] private GameObject Pipe;
+    [SerializeField] private Vector2 YPosBounders = new(-5f, 6f);
 
     private Transform _t;
     private Coroutine _pipeSpawner;
@@ -15,6 +16,8 @@ public class PipeSpawner : MonoBehaviour
         _t = transform;
 
         GameEventHandler.Instance.OnGameStart += () =>
+            _pipeSpawner ??= StartCoroutine(SpawnPipe());
+        GameEventHandler.Instance.OnGameRestart += () =>
             _pipeSpawner ??= StartCoroutine(SpawnPipe());
 
         GameEventHandler.Instance.OnGameOver += () =>
@@ -34,7 +37,7 @@ public class PipeSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(1f / Rate);
 
-        float m_randomYpos = Random.Range(-5f, 6f);
+        float m_randomYpos = Random.Range(YPosBounders.x, YPosBounders.y);
         Instantiate(Pipe, new(_t.position.x, m_randomYpos), Quaternion.identity, _t);
 
         _pipeSpawner = null;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Pipe : MonoBehaviour
@@ -10,10 +11,21 @@ public class Pipe : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _t = transform;
+
+        GameEventHandler.Instance.OnGameRestart += () => { Destroy(gameObject); };
+        GameEventHandler.Instance.OnGameOver += () => RB(false);
+        GameEventHandler.Instance.OnGamePause += () => RB(false);
+
+        GameEventHandler.Instance.OnGameStart += () => RB(true);
+    }
+
+    private void RB(bool enable)
+    {
+        _rb.simulated = enable;
     }
 
     void Update()
     {
-        _rb.MovePosition(_t.position + MovingSpeed * Vector3.left);
+        _rb.AddForce(_t.position + MovingSpeed * Time.deltaTime * Vector3.left, ForceMode2D.Force);
     }
 }

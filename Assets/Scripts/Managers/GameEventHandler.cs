@@ -11,7 +11,7 @@ public class GameEventHandler : MonoBehaviour
     public Action OnGamePause;
     public Action OnGameOver;
 
-    public Action OnPlayerScore;
+    public Action<int> OnPlayerScore;
 
     void Awake()
     {

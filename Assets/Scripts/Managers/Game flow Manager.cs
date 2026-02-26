@@ -10,6 +10,7 @@ public class GameFlowManager : MonoBehaviour
 
     public void StartGame() => GameEventHandler.Instance.OnGameStartReq?.Invoke();
 
+
     void Start()
     {
         GameEventHandler.Instance.OnGameStartReq += () => TransitionFrom(
@@ -22,7 +23,8 @@ public class GameFlowManager : MonoBehaviour
             GameOverMenu,
             GameHUD,
             TransitionSpeed,
-            GameEventHandler.Instance.OnGameStart);
+            GameEventHandler.Instance.OnGameStart,
+            () => { ContinuaGame(); });
 
         GameEventHandler.Instance.OnGamePause += () =>
         {
@@ -32,13 +34,14 @@ public class GameFlowManager : MonoBehaviour
                     PauseMenu,
                     GameHUD,
                     TransitionSpeed,
-                    GameEventHandler.Instance.OnGameStart);
+                    GameEventHandler.Instance.OnGameStart,
+                    () => { ContinuaGame(); });
             else
                 TransitionFrom(
                     GameHUD,
                     PauseMenu,
-                    TransitionSpeed
-                );
+                    TransitionSpeed,
+                    () => { StopGame(); });
         };
 
         GameEventHandler.Instance.OnGameOver += () =>
@@ -46,43 +49,45 @@ public class GameFlowManager : MonoBehaviour
             TransitionFrom(
                 GameHUD,
                 GameOverMenu,
-                TransitionSpeed);
+                TransitionSpeed,
+                () => { StopGame(); });
         };
     }
 
-    private void TransitionFrom(CanvasGroup screen1, CanvasGroup screen2, float transitionTime, Action actionToFireWhenFinish = null)
+    private void TransitionFrom(CanvasGroup screen1, CanvasGroup screen2, float TransitionSpeed, Action actionToFireWhenFinish = null, Action actionToFireWhenStart = null)
     {
-        _transitioning ??= StartCoroutine(Transition(screen1, screen2, transitionTime, actionToFireWhenFinish));
+        _transitioning ??= StartCoroutine(Transition(screen1, screen2, TransitionSpeed, actionToFireWhenFinish, actionToFireWhenStart));
     }
 
-    private IEnumerator Transition(CanvasGroup screen1, CanvasGroup screen2, float transitionTime, Action actionToFireWhenFinish)
+    private IEnumerator Transition(CanvasGroup screen1, CanvasGroup screen2, float TransitionSpeed, Action actionToFireWhenFinish, Action actionToFireWhenStart)
     {
-        yield return HideScreen(screen1, transitionTime / 2);
+        actionToFireWhenStart?.Invoke();
+
+        yield return HideScreen(screen1, TransitionSpeed);
         MakeSureToHideScreen(screen1, 0);
 
         PrepareScreenToTransition(screen2);
-        yield return ShowScreen(screen2, transitionTime / 2);
+        yield return ShowScreen(screen2, TransitionSpeed);
         MakeSureToHideScreen(screen2, 1);
 
-        if (actionToFireWhenFinish != null)
-            actionToFireWhenFinish?.Invoke();
+        actionToFireWhenFinish?.Invoke();
     }
 
-    private IEnumerator ShowScreen(CanvasGroup screen, float timeForTransition)
+    private IEnumerator ShowScreen(CanvasGroup screen, float TransitionSpeed)
     {
         yield return new WaitUntil(() =>
         {
-            screen.alpha = Mathf.Lerp(screen.alpha, screen.alpha + 1f / timeForTransition, Time.deltaTime * timeForTransition);
-            return screen.alpha == 1;
+            screen.alpha = Mathf.Lerp(screen.alpha, screen.alpha + 1f, Time.deltaTime * TransitionSpeed);
+            return screen.alpha >= 0.95f;
         });
     }
 
-    private IEnumerator HideScreen(CanvasGroup screen, float timeForTransition)
+    private IEnumerator HideScreen(CanvasGroup screen, float TransitionSpeed)
     {
         yield return new WaitUntil(() =>
         {
-            screen.alpha = Mathf.Lerp(screen.alpha, screen.alpha - 1f / timeForTransition, Time.deltaTime * timeForTransition);
-            return screen.alpha == 0;
+            screen.alpha = Mathf.Lerp(screen.alpha, screen.alpha - 1f, Time.deltaTime * TransitionSpeed);
+            return screen.alpha <= 0.05f;
         });
     }
 
@@ -97,4 +102,8 @@ public class GameFlowManager : MonoBehaviour
         screen.alpha = alpha;
         screen.gameObject.SetActive(alpha == 1);
     }
+
+    private void StopGame() => Time.timeScale = 0;
+
+    private void ContinuaGame() => Time.timeScale = 1;
 }
