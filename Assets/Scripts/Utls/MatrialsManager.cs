@@ -9,6 +9,7 @@ public class MaterialsManager : MonoBehaviour
     void Start()
     {
         GameEventHandler.Instance.OnGameStart += () => ManageMat(1);
+        GameEventHandler.Instance.OnGameContinue += () => ManageMat(1);
         GameEventHandler.Instance.OnGameOver += () => ManageMat(0);
         GameEventHandler.Instance.OnGamePause += () => ManageMat(0);
     }

@@ -4,13 +4,13 @@ public class PlayerCollisions : MonoBehaviour
 {
     [SerializeField] private int PipeScore = 1;
     [SerializeField] private AudioClip ScoreSound, DeathSound;
-    private const string PIPE = "Pipe", SCORE_AREA = "PipeScoreArea";
+    private const string PIPE = "Pipe", GROUND = "ground", SCORE_AREA = "PipeScoreArea";
 
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         // player Died
-        if (collision.gameObject.CompareTag(PIPE))
+        if (collision.gameObject.CompareTag(PIPE) || collision.gameObject.CompareTag(GROUND))
         {
             GameEventHandler.Instance.OnGameOver?.Invoke();
             AudioManager.Instance.PlayerSfx(DeathSound);

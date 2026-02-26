@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private inputSystem _inputs;
     private Rigidbody2D _rb;
     private Transform _t;
+    private Vector2 _startPos;
 
     void Awake()
     {
@@ -24,11 +25,21 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _t = transform;
+        _startPos = _t.position;
         _inputs.Player.Jump.performed += Jump;
 
         GameEventHandler.Instance.OnGameStart += TurnOnPlayerPhysics;
+        GameEventHandler.Instance.OnGameContinue += TurnOnPlayerPhysics;
+
         GameEventHandler.Instance.OnGameOver += TurnOffPlayerPhysics;
         GameEventHandler.Instance.OnGamePause += TurnOffPlayerPhysics;
+
+        GameEventHandler.Instance.OnGameRestart += () => resetPlayerPos();
+    }
+
+    private void resetPlayerPos()
+    {
+        _t.SetPositionAndRotation(_startPos, Quaternion.identity);
     }
 
     private void TurnOffPlayerPhysics()

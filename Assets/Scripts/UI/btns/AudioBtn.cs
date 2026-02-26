@@ -20,7 +20,6 @@ public class AudioBtn : MonoBehaviour
 
     private void SetIcon()
     {
-        print(SaveEngine.Instance.Data.settings.UseSFX);
         _btnIcon.sprite = BtnIcons[SaveEngine.Instance.Data.settings.UseSFX ? 0 : 1];
     }
 }

@@ -9,6 +9,7 @@ public class GameEventHandler : MonoBehaviour
     public Action OnGameStart;
     public Action OnGameRestart;
     public Action OnGamePause;
+    public Action OnGameContinue;
     public Action OnGameOver;
 
     public Action<int> OnPlayerScore;
@@ -27,6 +28,7 @@ public class GameEventHandler : MonoBehaviour
         OnGameStart = null;
         OnGameRestart = null;
         OnGamePause = null;
+        OnGameContinue = null;
         OnGameOver = null;
 
         OnPlayerScore = null;

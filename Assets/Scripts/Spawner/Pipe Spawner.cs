@@ -15,30 +15,34 @@ public class PipeSpawner : MonoBehaviour
     {
         _t = transform;
 
-        GameEventHandler.Instance.OnGameStart += () =>
-            _pipeSpawner ??= StartCoroutine(SpawnPipe());
-        GameEventHandler.Instance.OnGameRestart += () =>
-            _pipeSpawner ??= StartCoroutine(SpawnPipe());
+        GameEventHandler.Instance.OnGameStart += () => StartSpawning();
+        GameEventHandler.Instance.OnGameRestart += () => StartSpawning();
+        GameEventHandler.Instance.OnGameContinue += () => StartSpawning();
 
-        GameEventHandler.Instance.OnGameOver += () =>
-        {
-            if (_pipeSpawner != null)
-                StopCoroutine(_pipeSpawner);
-        };
+        GameEventHandler.Instance.OnGamePause += () => StopSpawning();
+        GameEventHandler.Instance.OnGameOver += () => StopSpawning();
+    }
 
-        GameEventHandler.Instance.OnGamePause += () =>
+    private void StartSpawning()
+    {
+        _pipeSpawner ??= StartCoroutine(SpawnPipe());
+    }
+
+    private void StopSpawning()
+    {
+        if (_pipeSpawner != null)
         {
-            if (_pipeSpawner != null)
-                StopCoroutine(_pipeSpawner);
-        };
+            StopCoroutine(_pipeSpawner);
+            _pipeSpawner = null;
+        }
     }
 
     private IEnumerator SpawnPipe()
     {
-        yield return new WaitForSeconds(1f / Rate);
-
         float m_randomYpos = Random.Range(YPosBounders.x, YPosBounders.y);
         Instantiate(Pipe, new(_t.position.x, m_randomYpos), Quaternion.identity, _t);
+
+        yield return new WaitForSeconds(1f / Rate);
 
         _pipeSpawner = null;
         _pipeSpawner ??= StartCoroutine(SpawnPipe());

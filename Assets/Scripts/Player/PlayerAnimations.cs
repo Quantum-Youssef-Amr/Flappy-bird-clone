@@ -10,6 +10,9 @@ public class PlayerAnimations : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         GameEventHandler.Instance.OnGameStart += StartPlayerAnimation;
+        GameEventHandler.Instance.OnGameContinue += StartPlayerAnimation;
+
+
         GameEventHandler.Instance.OnGameOver += StopPlayerAnimation;
         GameEventHandler.Instance.OnGamePause += StopPlayerAnimation;
     }

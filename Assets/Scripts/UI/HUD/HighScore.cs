@@ -7,10 +7,9 @@ public class HighScore : MonoBehaviour
 
     void Start() => GameEventHandler.Instance.OnGameOver += () => UpdateScoreText();
     void OnEnable() => GameEventHandler.Instance.OnGameOver += () => UpdateScoreText();
-    void OnDisable() => GameEventHandler.Instance.OnGameOver -= () => UpdateScoreText();
 
     private void UpdateScoreText()
     {
-        ScoreText.text = $"Highest Score: {SaveEngine.Instance.Data.HighestScore}";
+        ScoreText.text = SaveEngine.Instance.Data.HighestScore < 10 ? $"Highest Score: 0{SaveEngine.Instance.Data.HighestScore}" : $"Highest Score: {SaveEngine.Instance.Data.HighestScore}";
     }
 }

@@ -17,6 +17,18 @@ public class Pipe : MonoBehaviour
         GameEventHandler.Instance.OnGamePause += () => RB(false);
 
         GameEventHandler.Instance.OnGameStart += () => RB(true);
+        GameEventHandler.Instance.OnGameContinue += () => RB(true);
+
+    }
+
+    void OnDestroy()
+    {
+        GameEventHandler.Instance.OnGameRestart -= () => { Destroy(gameObject); };
+        GameEventHandler.Instance.OnGameOver -= () => RB(false);
+        GameEventHandler.Instance.OnGamePause -= () => RB(false);
+
+        GameEventHandler.Instance.OnGameStart -= () => RB(true);
+        GameEventHandler.Instance.OnGameContinue -= () => RB(true);
     }
 
     private void RB(bool enable)

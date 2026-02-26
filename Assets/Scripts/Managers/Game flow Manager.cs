@@ -10,35 +10,39 @@ public class GameFlowManager : MonoBehaviour
 
     void Start()
     {
-        GameEventHandler.Instance.OnGameStartReq += () => TransitionFrom(
+        GameEventHandler.Instance.OnGameStartReq += () =>
+        {
+            TransitionFrom(
             MainMenu,
             GameHUD,
             TransitionSpeed,
             GameEventHandler.Instance.OnGameStart);
+        };
 
-        GameEventHandler.Instance.OnGameRestart += () => TransitionFrom(
-            GameOverMenu,
-            GameHUD,
-            TransitionSpeed,
-            GameEventHandler.Instance.OnGameStart,
-            () => { ContinuaGame(); });
+        GameEventHandler.Instance.OnGameRestart += () =>
+        {
+            TransitionFrom(
+                GameOverMenu,
+                GameHUD,
+                TransitionSpeed,
+                GameEventHandler.Instance.OnGameStart);
+        };
 
         GameEventHandler.Instance.OnGamePause += () =>
         {
-            if (PauseMenu.gameObject.activeSelf)
+            TransitionFrom(
+                GameHUD,
+                PauseMenu,
+                TransitionSpeed);
+        };
 
-                TransitionFrom(
-                    PauseMenu,
-                    GameHUD,
-                    TransitionSpeed,
-                    GameEventHandler.Instance.OnGameStart,
-                    () => { ContinuaGame(); });
-            else
-                TransitionFrom(
-                    GameHUD,
-                    PauseMenu,
-                    TransitionSpeed,
-                    () => { StopGame(); });
+        GameEventHandler.Instance.OnGameContinue += () =>
+        {
+            TransitionFrom(
+                PauseMenu,
+                GameHUD,
+                TransitionSpeed,
+                GameEventHandler.Instance.OnGameStart);
         };
 
         GameEventHandler.Instance.OnGameOver += () =>
@@ -46,8 +50,7 @@ public class GameFlowManager : MonoBehaviour
             TransitionFrom(
                 GameHUD,
                 GameOverMenu,
-                TransitionSpeed,
-                () => { StopGame(); });
+                TransitionSpeed);
         };
     }
 
@@ -68,6 +71,7 @@ public class GameFlowManager : MonoBehaviour
         MakeSureToHideScreen(screen2, 1);
 
         actionToFireWhenFinish?.Invoke();
+        _transitioning = null;
     }
 
     private IEnumerator ShowScreen(CanvasGroup screen, float TransitionSpeed)
@@ -99,8 +103,4 @@ public class GameFlowManager : MonoBehaviour
         screen.alpha = alpha;
         screen.gameObject.SetActive(alpha == 1);
     }
-
-    private void StopGame() => Time.timeScale = 0;
-
-    private void ContinuaGame() => Time.timeScale = 1;
 }
