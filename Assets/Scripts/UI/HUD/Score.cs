@@ -5,29 +5,12 @@ public class Score : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI ScoreText;
     private int _score;
-
-    #region events
     void Start()
     {
         GameEventHandler.Instance.OnPlayerScore += score => { _score += score; UpdateScoreText(); };
         GameEventHandler.Instance.OnGameOver += () => SaveScore();
         GameEventHandler.Instance.OnGameRestart += () => SaveScore();
     }
-
-    void OnEnable()
-    {
-        GameEventHandler.Instance.OnPlayerScore -= score => { _score += score; UpdateScoreText(); };
-        GameEventHandler.Instance.OnGameOver -= () => SaveScore();
-        GameEventHandler.Instance.OnGameRestart -= () => SaveScore();
-    }
-
-    void OnDisable()
-    {
-        GameEventHandler.Instance.OnPlayerScore -= score => { _score += score; UpdateScoreText(); };
-        GameEventHandler.Instance.OnGameOver -= () => SaveScore();
-        GameEventHandler.Instance.OnGameRestart -= () => SaveScore();
-    }
-    #endregion
 
     private void SaveScore()
     {

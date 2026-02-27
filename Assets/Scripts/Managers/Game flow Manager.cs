@@ -22,7 +22,11 @@ public class GameFlowManager : MonoBehaviour
 
         GameEventHandler.Instance.OnGameRestart += () =>
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            TransitionFrom(
+                GameOverMenu,
+                GameHUD,
+                TransitionSpeed,
+                GameEventHandler.Instance.OnGameStart);
         };
 
         GameEventHandler.Instance.OnGamePause += () =>

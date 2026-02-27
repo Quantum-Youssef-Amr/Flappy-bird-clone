@@ -15,12 +15,12 @@ public class PipeSpawner : MonoBehaviour
     {
         _t = transform;
 
-        GameEventHandler.Instance.OnGameStart += () => StartSpawning();
-        GameEventHandler.Instance.OnGameRestart += () => StartSpawning();
-        GameEventHandler.Instance.OnGameContinue += () => StartSpawning();
+        GameEventHandler.Instance.OnGameStart += () => { StartSpawning(); SetPIpesMovementState(true); };
+        GameEventHandler.Instance.OnGameRestart += () => { StartSpawning(); DestroyPipes(); };
+        GameEventHandler.Instance.OnGameContinue += () => { StartSpawning(); SetPIpesMovementState(true); };
 
-        GameEventHandler.Instance.OnGamePause += () => StopSpawning();
-        GameEventHandler.Instance.OnGameOver += () => StopSpawning();
+        GameEventHandler.Instance.OnGamePause += () => { StopSpawning(); SetPIpesMovementState(false); };
+        GameEventHandler.Instance.OnGameOver += () => { StopSpawning(); SetPIpesMovementState(false); };
     }
 
     private void StartSpawning()
@@ -46,5 +46,21 @@ public class PipeSpawner : MonoBehaviour
 
         _pipeSpawner = null;
         _pipeSpawner ??= StartCoroutine(SpawnPipe());
+    }
+
+    private void DestroyPipes()
+    {
+        for (int pipe = 0; pipe < _t.childCount; pipe++)
+        {
+            Destroy(_t.GetChild(pipe).gameObject);
+        }
+    }
+
+    private void SetPIpesMovementState(bool state)
+    {
+        for (int pipe = 0; pipe < _t.childCount; pipe++)
+        {
+            _t.GetChild(pipe).GetComponent<Pipe>().SetMovementMode(state);
+        }
     }
 }

@@ -1,13 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class Pipe : MonoBehaviour
 {
     [SerializeField] private float MovingSpeed;
     [SerializeField] private float RemoveAfter = 10f;
     private Rigidbody2D _rb;
     private Transform _t;
+    private bool _disableMovement;
 
     void Start()
     {
@@ -15,45 +15,28 @@ public class Pipe : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         StartCoroutine(RemovePipe());
 
-        GameEventHandler.Instance.OnGamePause += () => SetRigidbodyState(isEnabled: false);
-        GameEventHandler.Instance.OnGameOver += () => SetRigidbodyState(isEnabled: false);
-
-        GameEventHandler.Instance.OnGameStart += () => SetRigidbodyState(isEnabled: true);
-        GameEventHandler.Instance.OnGameContinue += () => SetRigidbodyState(isEnabled: true);
-
-        GameEventHandler.Instance.OnGameRestart += () => DestroyPIpeNow();
-
+        GameEventHandler.Instance.OnGamePause += () => StopAllCoroutines();
+        GameEventHandler.Instance.OnGameContinue += () => StartCoroutine(RemovePipe());
     }
 
-    private void OnDestroy()
+    void FixedUpdate()
     {
-        GameEventHandler.Instance.OnGamePause -= () => SetRigidbodyState(isEnabled: false);
-        GameEventHandler.Instance.OnGameOver -= () => SetRigidbodyState(isEnabled: false);
-
-        GameEventHandler.Instance.OnGameStart -= () => SetRigidbodyState(isEnabled: true);
-        GameEventHandler.Instance.OnGameContinue -= () => SetRigidbodyState(isEnabled: true);
-
-    }
-
-    private void SetRigidbodyState(bool isEnabled)
-    {
-        _rb.simulated = isEnabled;
-        if (!isEnabled) StopAllCoroutines(); else StartCoroutine(RemovePipe());
-    }
-
-    void Update()
-    {
+        if (_disableMovement)
+        {
+            _rb.linearVelocity = Vector2.zero;
+            return;
+        }
         _rb.AddForce(_t.position + MovingSpeed * Time.deltaTime * Vector3.left, ForceMode2D.Force);
     }
 
     private IEnumerator RemovePipe()
     {
         yield return new WaitForSeconds(RemoveAfter);
-        DestroyPIpeNow();
+        Destroy(gameObject);
     }
 
-    private void DestroyPIpeNow()
+    public void SetMovementMode(bool state)
     {
-        Destroy(gameObject);
+        _disableMovement = !state;
     }
 }
