@@ -80,15 +80,7 @@ This project was created to strengthen and demonstrate:
 - Game over and restart functionality
 - Sound effects and ambient audio
 - Clean, readable codebase suitable for learning
-
-## Future Enhancements
-
-- Difficulty progression system
-- Power-ups and special mechanics
-- Leaderboard/high score persistence
-- Mobile platform optimization
-- Additional visual themes and skins
-
+  
 ---
 
 Made as a learning project for game development. Feel free to explore, modify, and learn from the code!
