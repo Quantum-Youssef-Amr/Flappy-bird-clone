@@ -83,4 +83,12 @@ This project was created to strengthen and demonstrate:
   
 ---
 
-Made as a learning project for game development. Feel free to explore, modify, and learn from the code!
+## ⚖️ License
+
+**No license – All rights reserved.**
+
+This project is shared for **viewing and portfolio purposes only**.  
+You may not copy, modify, distribute, or use any part of this game or its assets without explicit written permission from the author.
+
+> 👤 **Author:** Youssef Amr – *The Solo Dev*
+
